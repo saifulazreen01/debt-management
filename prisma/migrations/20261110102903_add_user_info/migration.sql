@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "UserInfo" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT DEFAULT 1,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "dateOfBirth" DATETIME NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);

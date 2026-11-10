@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CalendarDaysIcon } from "lucide-react";
 import { GuideAvatar } from "@/components/journey/guide-character";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -61,7 +61,9 @@ export function ThisMonthDue({
           </div>
         </div>
         {showReviewLink ? (
-          <Button render={<Link href="/debts" />}>Review debts</Button>
+          <Link href="/debts" className={buttonVariants()}>
+            Review debts
+          </Link>
         ) : null}
       </CardHeader>
       <CardContent className="grid gap-3 border-t border-white/35 bg-white/25 p-4 backdrop-blur-md sm:grid-cols-3 dark:border-white/10 dark:bg-white/5">

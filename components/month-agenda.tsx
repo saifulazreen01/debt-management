@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GuideAvatar } from "@/components/journey/guide-character";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -43,9 +43,12 @@ export function MonthAgenda({ insights }: { insights: DebtInsight[] }) {
             </CardTitle>
           </div>
         </div>
-        <Button variant="outline" size="sm" render={<Link href="/debts" />}>
+        <Link
+          href="/debts"
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
           Open debts
-        </Button>
+        </Link>
       </CardHeader>
       <CardContent>
         {dueThisMonth.length === 0 ? (

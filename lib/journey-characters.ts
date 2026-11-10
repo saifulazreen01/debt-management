@@ -156,7 +156,13 @@ export function getJourneyMoment(context: JourneyContext): JourneyMoment {
 }
 
 export function getPageCompanion(
-  page: "dashboard" | "debts" | "incomes" | "investments" | "assets"
+  page:
+    | "dashboard"
+    | "debts"
+    | "incomes"
+    | "investments"
+    | "assets"
+    | "calculator"
 ): JourneyCharacter {
   switch (page) {
     case "debts":
@@ -167,6 +173,8 @@ export function getPageCompanion(
       return JOURNEY_CHARACTERS.nuri;
     case "assets":
       return JOURNEY_CHARACTERS.aiman;
+    case "calculator":
+      return JOURNEY_CHARACTERS.tok;
     default:
       return JOURNEY_CHARACTERS.ria;
   }

@@ -22,7 +22,9 @@ function getPrismaClient() {
       cached &&
       "investment" in cached &&
       "income" in cached &&
-      "asset" in cached
+      "asset" in cached &&
+      "userInfo" in cached &&
+      "debtPayment" in cached
     ) {
       return cached;
     }

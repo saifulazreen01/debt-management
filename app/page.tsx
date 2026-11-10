@@ -1,17 +1,34 @@
 import { Suspense } from "react";
 import { io } from "next/cache";
 import { DebtChart } from "@/components/debt-chart";
+import { UserInfoOnboarding } from "@/components/form/user-info-onboarding";
 import { JourneyCoach } from "@/components/journey/journey-coach";
 import { MonthAgenda } from "@/components/month-agenda";
 import { MonthSnapshot } from "@/components/month-snapshot";
 import { PageFrame } from "@/components/page-frame";
 import { PageHeader } from "@/components/page-header";
 import { ThisMonthDue } from "@/components/this-month-due";
-import { Card, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card";
-import { formatCurrency, formatDate, getDebtFreedomDate, getDebtInsights, getMonthlyPaymentSeries, getMonthlyRepayment, getMonthsToDebtFreedom, getOverallDebtProgress, getTotalDebt, } from "@/lib/debts";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  formatCurrency,
+  formatDate,
+  getDebtFreedomDate,
+  getDebtInsights,
+  getMonthlyPaymentSeries,
+  getMonthlyRepayment,
+  getMonthsToDebtFreedom,
+  getOverallDebtProgress,
+  getTotalDebt,
+} from "@/lib/debts";
 import { getDsrSummary, getMonthlyIncome } from "@/lib/income";
 import { getTotalInvestments } from "@/lib/investments";
 import { prisma } from "@/lib/prisma";
+import { getUserGreetingName, getUserProfile } from "@/lib/user-info";
 
 function DashboardSkeleton() {
   return (
@@ -38,6 +55,11 @@ function currentMonthLabel(asOf = new Date()) {
 async function DashboardContent() {
   await io();
 
+  const user = await getUserProfile();
+  if (!user) {
+    return <UserInfoOnboarding />;
+  }
+
   const asOf = new Date();
   const [debts, incomes, investments] = await Promise.all([
     prisma.debt.findMany({
@@ -62,9 +84,16 @@ async function DashboardContent() {
   const freedomDate = getDebtFreedomDate(debts, asOf);
   const monthsToFreedom = getMonthsToDebtFreedom(debts, asOf);
   const dueCount = insights.filter((item) => item.dueThisMonth > 0).length;
+  const greetingName = getUserGreetingName(user.displayName || user.name);
 
   return (
     <>
+      <PageHeader
+        page="dashboard"
+        title={`Hi ${greetingName}`}
+        description={`What is happening in ${currentMonthLabel(asOf)}: money in, debt out, and what still needs attention.`}
+      />
+
       <JourneyCoach
         context={{
           remainingDebt,
@@ -102,15 +131,8 @@ async function DashboardContent() {
 }
 
 export default function Home() {
-  const monthLabel = currentMonthLabel();
-
   return (
     <PageFrame>
-      <PageHeader
-        page="dashboard"
-        title="Dashboard"
-        description={`What is happening in ${monthLabel}: money in, debt out, and what still needs attention.`}
-      />
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
       </Suspense>

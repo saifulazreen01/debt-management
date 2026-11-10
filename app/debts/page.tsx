@@ -8,6 +8,7 @@ import { DebtFormDialog } from "@/components/form/debt-form-dialog";
 import { JourneyCoach } from "@/components/journey/journey-coach";
 import { PageFrame } from "@/components/page-frame";
 import { PageHeader } from "@/components/page-header";
+import { PaymentLog } from "@/components/payment-log";
 import { ThisMonthDue } from "@/components/this-month-due";
 import {
   Card,
@@ -33,12 +34,16 @@ import { prisma } from "@/lib/prisma";
 async function DebtsContent() {
   await io();
 
-  const [debts, incomes] = await Promise.all([
+  const [debts, incomes, payments] = await Promise.all([
     prisma.debt.findMany({
       orderBy: [{ category: "asc" }, { startDate: "asc" }],
     }),
     prisma.income.findMany({
       orderBy: [{ category: "asc" }, { createdAt: "desc" }],
+    }),
+    prisma.debtPayment.findMany({
+      include: { debt: true },
+      orderBy: [{ periodYear: "desc" }, { periodMonth: "desc" }, { paidAt: "desc" }],
     }),
   ]);
 
@@ -86,6 +91,7 @@ async function DebtsContent() {
       />
 
       <DebtPayoffCards insights={insights} />
+      <PaymentLog debts={debts} payments={payments} />
       <CategoryReport rows={categoryReport} />
       <DebtList debts={debts} />
     </>

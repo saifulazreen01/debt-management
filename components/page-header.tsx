@@ -16,7 +16,13 @@ export function PageHeader({
   description: string;
   actions?: ReactNode;
   companion?: JourneyCharacter;
-  page?: "dashboard" | "debts" | "incomes" | "investments" | "assets";
+  page?:
+    | "dashboard"
+    | "debts"
+    | "incomes"
+    | "investments"
+    | "assets"
+    | "calculator";
 }) {
   const guide = companion ?? (page ? getPageCompanion(page) : null);
 
